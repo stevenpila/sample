@@ -1,0 +1,10 @@
+CC=g++
+CFLAGS=-c -Wall
+LDFLAGS=
+
+SOURCE_PATH=../src
+
+SOURCES=
+OBJECTS=
+
+TARGET=sample
