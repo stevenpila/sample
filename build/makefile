@@ -8,14 +8,17 @@ LDLIBS= \
 
 SOURCE_PATH=../src
 
+INCLUDES= \
+	-I/home/nekkapajigar/Documents/Programming/git/sample/src/include
 SOURCES= \
-	$(SOURCE_PATH)/main.cpp
+	$(SOURCE_PATH)/main.cpp \
+	$(SOURCE_PATH)/Database.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 
 TARGET=sample
 
 all: $(SOURCES) $(TARGET)
-	echo -n "\nsuccessfully created $(TARGET)\n\n"
+	@echo -n "\nsuccessfully created $(TARGET)\n\n"
 
 run:
 	./$(TARGET)
@@ -27,4 +30,4 @@ $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $@ $(LDFLAGS) $(LDLIBS)
 
 .cpp.o:
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@
