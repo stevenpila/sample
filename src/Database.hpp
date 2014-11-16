@@ -9,20 +9,42 @@
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
 
+#include <boost/thread/thread.hpp>
+#include <boost/thread/mutex.hpp>
+
 #ifndef _DATABASE_H_
 #define _DATABASE_H_
+
+typedef std::auto_ptr<sql::Connection> p_connection;
+typedef std::auto_ptr<sql::ResultSet> p_resultSet;
+typedef std::auto_ptr<sql::Statement> p_statement;
 
 class Database
 {
 	// public member functions
  	public:
+		/**
+		    @description - get instance of Database object
+		    @return instance of Database object
+		 */
 		static Database& GetInstance();
-		int ConnectToDatabase();		
+
+		/**
+		    @description - execute the given sql query string
+		    @param sqlQuery - sql query string
+		    @param res - container of the sql query result
+		    @return container with the result from the sql query
+		 */
+		int ExecuteQuery(std::string const sqlQuery, p_resultSet& res);
 
 	// private member functions
 	private:
-		 		
-
+		/**
+		    @description - establish a connection to database
+		    @return SUCCESS(0) if connection is open and FAIL(1) if not
+		 */
+		int ConnectToDatabase();
+	
 	// private member functions (dont modify)
 	private:
 		Database(){};
@@ -31,12 +53,9 @@ class Database
 
 	// private member variables
 	private:
-		sql::Driver* c_driver;
-		sql::Connection* c_conn;
-		sql::Statement* c_stmt;
-		sql::ResultSet* c_res;
+		boost::mutex c_mutexDb;
 
-		DBLoginConfiguration c_dbLoginConfig;
+		p_connection c_conn;
 };
 
 #endif

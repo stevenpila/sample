@@ -4,7 +4,8 @@ LDFLAGS= \
 	-L/usr/lib/
 
 LDLIBS= \
-	-lmysqlcppconn
+	-lmysqlcppconn \
+	-lboost_system
 
 SOURCE_PATH=../src
 
@@ -17,11 +18,13 @@ OBJECTS=$(SOURCES:.cpp=.o)
 
 TARGET=sample
 
-all: $(SOURCES) $(TARGET)
-	@echo -n "\nsuccessfully created $(TARGET)\n\n"
+all: clean build
 
+build: $(SOURCES) $(TARGET)
+	@echo -n "\nsuccessfully created $(TARGET)\n\n"
 run:
-	./$(TARGET)
+	@echo -n "\nrunning $(TARGET)...\n\n"
+	@./$(TARGET)
 
 clean:
 	rm -rf $(SOURCE_PATH)/*.o $(TARGET)
