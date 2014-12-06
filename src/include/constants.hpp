@@ -11,3 +11,11 @@
 
 int const SUCCESS = 0;
 int const FAIL = 1;
+
+enum LogType
+{
+	INFO, 
+	DEBUG, 
+	WARNING, 
+	ERROR
+};

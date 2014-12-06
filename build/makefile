@@ -13,7 +13,8 @@ INCLUDES= \
 	-I/home/nekkapajigar/Documents/Programming/git/sample/src/include
 SOURCES= \
 	$(SOURCE_PATH)/main.cpp \
-	$(SOURCE_PATH)/Database.cpp
+	$(SOURCE_PATH)/Database.cpp \
+	$(SOURCE_PATH)/Logger.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 
 TARGET=sample

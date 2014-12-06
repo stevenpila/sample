@@ -1,4 +1,4 @@
-#include <constants.hpp>
+#include "Logger.hpp"
 
 #include <memory>
 
@@ -27,7 +27,7 @@ class Database
 		    @description - get instance of Database object
 		    @return instance of Database object
 		 */
-		static Database& GetInstance();
+		static Database* GetInstance();
 
 		/**
 		    @description - execute the given sql query string
@@ -41,18 +41,21 @@ class Database
 	private:
 		/**
 		    @description - establish a connection to database
-		    @return SUCCESS(0) if connection is open and FAIL(1) if not
+		    @return SUCCESS if connection is open and FAIL if not
 		 */
 		int ConnectToDatabase();
+
+		~Database();
 	
 	// private member functions (dont modify)
 	private:
 		Database(){};
 		Database(Database const&);
-		void operator=(Database const&);
+		Database& operator=(Database const&);
 
 	// private member variables
 	private:
+		static Database* c_pDatabase;
 		boost::mutex c_mutexDb;
 
 		p_connection c_conn;

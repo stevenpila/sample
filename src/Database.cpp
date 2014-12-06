@@ -3,11 +3,17 @@
 #include <memory>
 #include <boost/scoped_ptr.hpp>
 
-Database& Database::GetInstance()
+Database* Database::c_pDatabase = NULL;
+
+/* Public Member Functions */
+Database* Database::GetInstance()
 {
-	static Database dbInstance;
+	if(!c_pDatabase)
+	{
+		c_pDatabase = new Database;
+	}
 	
-	return dbInstance;
+	return c_pDatabase;
 }
 
 int Database::ExecuteQuery(std::string sqlQuery, p_resultSet& res)
@@ -16,17 +22,19 @@ int Database::ExecuteQuery(std::string sqlQuery, p_resultSet& res)
 
 	if(SUCCESS == status)
 	{
+		p_statement stmt;
+
 		try
 		{
 			boost::mutex::scoped_lock lock(c_mutexDb);
 
-			p_statement stmt(c_conn->createStatement());
+			stmt.reset(c_conn->createStatement());
 
 			res.reset(stmt->executeQuery(sqlQuery)); // execute sql query
 		}
 		catch(sql::SQLException& e)
 		{
-			std::cout << "Database::ExecuteQuery SQLException: " << e.what() << std::endl;
+			std::cout << "Database::ExecuteQuery SQLException: " << e.what() << ", sqlQuery = " << sqlQuery << std::endl;
 
 			return FAIL;
 		}
@@ -39,6 +47,7 @@ int Database::ExecuteQuery(std::string sqlQuery, p_resultSet& res)
 	return status;
 }
 
+/* Private Member Functions */
 int Database::ConnectToDatabase()
 {
 	try
@@ -67,4 +76,9 @@ int Database::ConnectToDatabase()
 	}
 
 	return SUCCESS;
+}
+
+Database::~Database()
+{
+	std::cout << "Database::~Database Database instance destroyed" << std::endl;
 }

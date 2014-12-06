@@ -8,13 +8,26 @@ int main(int argc, char* argv[])
 	static_cast<void>(argv);
 
 	std::string sql = "SELECT * FROM names";
+	std::string strErrorMsg;
+	std::string strFile = "sample.txt";
 	p_resultSet res;
 	
-	int status = Database::GetInstance().ExecuteQuery(sql, res);
+	int status = Database::GetInstance()->ExecuteQuery(sql, res);
 
-	if(SUCCESS != status)
+	if(SUCCESS == status)
 	{
-		std::cout << "Database query failure!" << std::endl;
+		strErrorMsg = "Database query failure!";
+
+		if(SUCCESS != Logger::GetInstance()->OpenFile(strFile))
+		{
+			return FAIL;
+		}
+
+		Logger::GetInstance()->WriteLog(INFO, strErrorMsg);
+		Logger::GetInstance()->WriteLog(INFO, strErrorMsg);
+		std::cout << strErrorMsg << std::endl;
+
+		Logger::GetInstance()->CloseFile();
 	}
 	else
 	{
@@ -45,4 +58,6 @@ int main(int argc, char* argv[])
 			std::cout << "ResultSet empty!" << std::endl;
 		}
 	}
+
+	return status;
 }
