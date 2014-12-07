@@ -14,12 +14,12 @@ Logger* Logger::GetInstance()
 	return c_pLogger;
 }
 
-int Logger::OpenFile(std::string const fileName)
+int Logger::OpenFile(std::string const& fileName)
 {
 	try
 	{
 		boost::mutex::scoped_lock lock(c_mutexLog);
-	
+
 		c_file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
 
 		c_file.open(fileName.c_str(), std::ofstream::app); // open the file
@@ -49,29 +49,21 @@ int Logger::OpenFile(std::string const fileName)
 	return SUCCESS;
 }
 
-int Logger::WriteLog(LogType const type, std::string const log)
+int Logger::WriteLog(LogType const type, std::string const& log)
 {
 	try
 	{
-		if(c_file.is_open())
-		{
-			boost::mutex::scoped_lock lock(c_mutexLog);
+		boost::mutex::scoped_lock lock(c_mutexLog);
 
-			c_file.exceptions(std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit);
+		c_file.exceptions(std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit);
 
-			std::stringstream strLog;
-			std::string strType = GetLogType(type);
-			std::string strTimestamp = GetTimeStamp();
+		std::stringstream strLog;
+		std::string strType = GetLogType(type);
+		std::string strTimestamp = GetTimeStamp();
 
-			strLog << strTimestamp << " - " << strType << " - " << __FILE__ << ":" << __LINE__ << " - " << log << std::endl;
+		strLog << strTimestamp << " - " << strType << " - " << __FILE__ << ":" << __LINE__ << " - " << log << std::endl;
 
-			//std::cout << strLog.str();
-			c_file << strLog.str();
-		}
-		else
-		{
-			std::cout << "Logger::WriteLog File was not opened successfully" << std::endl;
-		}
+		c_file << strLog.str();
 		
 	}
 	catch(std::ofstream::failure e)
@@ -96,19 +88,11 @@ int Logger::CloseFile()
 {
 	try
 	{
-		if(c_file.is_open())
-		{
-			boost::mutex::scoped_lock lock(c_mutexLog);
+		boost::mutex::scoped_lock lock(c_mutexLog);
 
-			c_file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
+		c_file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
 
-			c_file.close(); // close the file
-		}
-		else
-		{
-			std::cout << "Logger::CloseFile File was not opened successfully" << std::endl;
-		}
-		
+		c_file.close(); // close the file
 	}
 	catch(std::ofstream::failure e)
 	{
@@ -130,11 +114,13 @@ int Logger::CloseFile()
 
 std::string Logger::GetTimeStamp()
 {
-	std::stringstream timeStamp;
-	boost::posix_time::time_facet *facet = new boost::posix_time::time_facet("%Y-%m-%d %H:%M:%S");
-	std::cout.imbue(std::locale(std::cout.getloc(), facet));
+	std::ostringstream timeStamp;
 
-	timeStamp << boost::posix_time::second_clock::local_time();
+	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
+	boost::posix_time::time_facet* facet = new boost::posix_time::time_facet("%Y-%m-%d %H:%M:%S");
+
+	timeStamp.imbue(std::locale(timeStamp.getloc(), facet));
+	timeStamp << now;
 
 	return timeStamp.str();
 }

@@ -26,7 +26,7 @@ class Logger
 		    @param fileName - file name to be open
 		    @return SUCCESS if successfully opened file and FAIL if not
 		*/
-		int OpenFile(std::string const fileName);
+		int OpenFile(std::string const& fileName);
 
 		/**
 		    @description - writes log information to file
@@ -34,7 +34,7 @@ class Logger
 		    @param log - string information to be logged to file
 		    @return SUCCESS if successfully logged to file and FAIL if not
 		*/
-		int WriteLog(LogType const type, std::string const log);
+		int WriteLog(LogType const type, std::string const& log);
 
 		/**
 		    @description - closes the opened file

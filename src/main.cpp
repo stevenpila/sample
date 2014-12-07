@@ -12,8 +12,6 @@ int main(int argc, char* argv[])
 	std::string strErrorMsg;
 	p_resultSet res;
 
-	remove(strFile.c_str()); // remove existing log file first
-
 	if(SUCCESS != Logger::GetInstance()->OpenFile(strFile)) // creating and opening log file
 	{
 		return FAIL;
@@ -52,7 +50,7 @@ int main(int argc, char* argv[])
 		}
 		else
 		{
-			//LOG_INFO("ResultSet empty!");
+			LOG_INFO("ResultSet empty!");
 		}
 	}
 	

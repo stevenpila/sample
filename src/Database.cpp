@@ -72,6 +72,11 @@ int Database::ExecuteQuery(std::string sqlQuery, p_resultSet& res)
 }
 
 /* Private Member Functions */
+Database::Database()
+{
+	LOG_DEBUG("Database::Database Database instance created");
+};
+
 Database::~Database()
 {
 	LOG_DEBUG("Database::~Database Database instance destroyed");

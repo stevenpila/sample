@@ -45,11 +45,11 @@ class Database
 
 	// private member functions
 	private:
-		~Database();
 	
 	// private member functions (dont modify)
 	private:
-		Database(){};
+		Database();
+		~Database();
 		Database(Database const&);
 		Database& operator=(Database const&);
 
