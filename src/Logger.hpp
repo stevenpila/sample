@@ -5,7 +5,8 @@
 
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
-
+#include <boost/date_time/posix_time/posix_time_io.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #ifndef _LOGGER_H_
 #define _LOGGER_H_
@@ -66,5 +67,10 @@ class Logger
 
 		std::ofstream c_file;
 };
+
+#define LOG_INFO(string) Logger::GetInstance()->WriteLog(INFO, string);
+#define LOG_DEBUG(string) Logger::GetInstance()->WriteLog(DEBUG, string);
+#define LOG_WARNING(string) Logger::GetInstance()->WriteLog(WARNING, string);
+#define LOG_ERROR(string) Logger::GetInstance()->WriteLog(ERROR, string);
 
 #endif

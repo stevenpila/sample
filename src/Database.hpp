@@ -30,6 +30,12 @@ class Database
 		static Database* GetInstance();
 
 		/**
+		    @description - establish a connection to database
+		    @return SUCCESS if connection is open and FAIL if not
+		 */
+		int ConnectToDatabase();
+
+		/**
 		    @description - execute the given sql query string
 		    @param sqlQuery - sql query string
 		    @param res - container of the sql query result
@@ -39,12 +45,6 @@ class Database
 
 	// private member functions
 	private:
-		/**
-		    @description - establish a connection to database
-		    @return SUCCESS if connection is open and FAIL if not
-		 */
-		int ConnectToDatabase();
-
 		~Database();
 	
 	// private member functions (dont modify)

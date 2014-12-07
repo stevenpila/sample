@@ -28,7 +28,7 @@ run:
 	@./$(TARGET)
 
 clean:
-	rm -rf $(SOURCE_PATH)/*.o $(TARGET)
+	rm -rf $(SOURCE_PATH)/*.o $(TARGET) Logs.txt
 
 $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $@ $(LDFLAGS) $(LDLIBS)

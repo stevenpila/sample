@@ -16,11 +16,12 @@ Logger* Logger::GetInstance()
 
 int Logger::OpenFile(std::string const fileName)
 {
-	boost::mutex::scoped_lock lock(c_mutexLog);
-	
-	c_file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
 	try
 	{
+		boost::mutex::scoped_lock lock(c_mutexLog);
+	
+		c_file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
+
 		c_file.open(fileName.c_str(), std::ofstream::app); // open the file
 
 		if(!c_file.is_open()) // check if file is successfully opened
@@ -43,26 +44,34 @@ int Logger::OpenFile(std::string const fileName)
 		return FAIL;
 	}
 
-	std::cout << "Logger::OpenFile File opened successfully" << std::endl;
+	//std::cout << "Logger::OpenFile File opened successfully" << std::endl;
 
 	return SUCCESS;
 }
 
 int Logger::WriteLog(LogType const type, std::string const log)
 {
-	boost::mutex::scoped_lock lock(c_mutexLog);
-
-	c_file.exceptions(std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit);
 	try
 	{
-		std::stringstream strLog;
-		std::string strType = GetLogType(type);
-		std::string strTimestamp = GetTimeStamp();
+		if(c_file.is_open())
+		{
+			boost::mutex::scoped_lock lock(c_mutexLog);
 
-		strLog << strTimestamp << " - " << strType << " - " << __FILE__ << ":" << __LINE__ << " - " << log << std::endl;
+			c_file.exceptions(std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit);
 
-		std::cout << strLog.str();
-		c_file << strLog.str();
+			std::stringstream strLog;
+			std::string strType = GetLogType(type);
+			std::string strTimestamp = GetTimeStamp();
+
+			strLog << strTimestamp << " - " << strType << " - " << __FILE__ << ":" << __LINE__ << " - " << log << std::endl;
+
+			//std::cout << strLog.str();
+			c_file << strLog.str();
+		}
+		else
+		{
+			std::cout << "Logger::WriteLog File was not opened successfully" << std::endl;
+		}
 		
 	}
 	catch(std::ofstream::failure e)
@@ -78,19 +87,28 @@ int Logger::WriteLog(LogType const type, std::string const log)
 		return FAIL;
 	}
 
-	std::cout << "Logger::WriteLog Successfully wrote to log file" << std::endl;
+	//std::cout << "Logger::WriteLog Successfully wrote to log file" << std::endl;
 
 	return SUCCESS;
 }
 
 int Logger::CloseFile()
 {
-	boost::mutex::scoped_lock lock(c_mutexLog);
-
-	c_file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
 	try
 	{
-		c_file.close(); // close the file
+		if(c_file.is_open())
+		{
+			boost::mutex::scoped_lock lock(c_mutexLog);
+
+			c_file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
+
+			c_file.close(); // close the file
+		}
+		else
+		{
+			std::cout << "Logger::CloseFile File was not opened successfully" << std::endl;
+		}
+		
 	}
 	catch(std::ofstream::failure e)
 	{
@@ -105,16 +123,20 @@ int Logger::CloseFile()
 		return FAIL;
 	}
 
-	std::cout << "Logger::CloseFile File closed successfully" << std::endl;
+	//std::cout << "Logger::CloseFile File closed successfully" << std::endl;
 
 	return SUCCESS;
 }
 
 std::string Logger::GetTimeStamp()
 {
-	std::string timeStamp = "TIMESTAMP";
+	std::stringstream timeStamp;
+	boost::posix_time::time_facet *facet = new boost::posix_time::time_facet("%Y-%m-%d %H:%M:%S");
+	std::cout.imbue(std::locale(std::cout.getloc(), facet));
 
-	return timeStamp;
+	timeStamp << boost::posix_time::second_clock::local_time();
+
+	return timeStamp.str();
 }
 
 std::string Logger::GetLogType(LogType const type)
