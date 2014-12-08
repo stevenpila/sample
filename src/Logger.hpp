@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <cstdarg>
 
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
@@ -23,18 +24,18 @@ class Logger
 
 		/**
 		    @description - opens the given file
-		    @param fileName - file name to be open
 		    @return SUCCESS if successfully opened file and FAIL if not
 		*/
-		int OpenFile(std::string const& fileName);
+		int OpenFile();
 
 		/**
 		    @description - writes log information to file
 		    @param type - log type of the logged information
-		    @param log - string information to be logged to file
+		    @param format - string format of information to be logged to file
+		    @param ... - list of arguments passed
 		    @return SUCCESS if successfully logged to file and FAIL if not
 		*/
-		int WriteLog(LogType const type, std::string const& log);
+		int WriteLog(LogType const type, char const* format, ... );
 
 		/**
 		    @description - closes the opened file
@@ -62,15 +63,15 @@ class Logger
 	// private member variables
 	private:
 		static Logger* c_pLogger;
+		static std::ofstream c_file;
+		static std::string const c_fileName;
 
 		boost::mutex c_mutexLog;
-
-		std::ofstream c_file;
 };
 
-#define LOG_INFO(string) Logger::GetInstance()->WriteLog(INFO, string);
-#define LOG_DEBUG(string) Logger::GetInstance()->WriteLog(DEBUG, string);
-#define LOG_WARNING(string) Logger::GetInstance()->WriteLog(WARNING, string);
-#define LOG_ERROR(string) Logger::GetInstance()->WriteLog(ERROR, string);
+#define LOG_INFO(format, ... ) Logger::GetInstance()->WriteLog(INFO, format, ##__VA_ARGS__);
+#define LOG_DEBUG(format, ... ) Logger::GetInstance()->WriteLog(DEBUG, format, ##__VA_ARGS__);
+#define LOG_WARNING(format, ... ) Logger::GetInstance()->WriteLog(WARNING, format, ##__VA_ARGS__);
+#define LOG_ERROR(format, ... ) Logger::GetInstance()->WriteLog(ERROR, format, ##__VA_ARGS__);
 
 #endif

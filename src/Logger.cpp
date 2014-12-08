@@ -3,18 +3,21 @@
 #include <boost/lexical_cast.hpp>
 
 Logger* Logger::c_pLogger = NULL;
+const std::string Logger::c_fileName = "Logs.txt";
+std::ofstream Logger::c_file;
 
 Logger* Logger::GetInstance()
 {
 	if(!c_pLogger)
 	{
 		c_pLogger = new Logger;
+		c_pLogger->OpenFile();
 	}
 
 	return c_pLogger;
 }
 
-int Logger::OpenFile(std::string const& fileName)
+int Logger::OpenFile()
 {
 	try
 	{
@@ -22,7 +25,7 @@ int Logger::OpenFile(std::string const& fileName)
 
 		c_file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
 
-		c_file.open(fileName.c_str(), std::ofstream::app); // open the file
+		c_file.open(c_fileName.c_str(), std::ofstream::app); // open the file
 
 		if(!c_file.is_open()) // check if file is successfully opened
 		{
@@ -49,7 +52,7 @@ int Logger::OpenFile(std::string const& fileName)
 	return SUCCESS;
 }
 
-int Logger::WriteLog(LogType const type, std::string const& log)
+int Logger::WriteLog(LogType const type, char const* format, ... )
 {
 	try
 	{
@@ -57,14 +60,17 @@ int Logger::WriteLog(LogType const type, std::string const& log)
 
 		c_file.exceptions(std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit);
 
-		std::stringstream strLog;
+		char logMessage[256];
+		va_list args;
+		va_start(args, format);
+		vsprintf(logMessage, format, args);
+
 		std::string strType = GetLogType(type);
 		std::string strTimestamp = GetTimeStamp();
 
-		strLog << strTimestamp << " - " << strType << " - " << __FILE__ << ":" << __LINE__ << " - " << log << std::endl;
+		c_file << strTimestamp << " - " << strType << " - " << __FILE__ << ":" << __LINE__ << " - " << logMessage << std::endl;
 
-		c_file << strLog.str();
-		
+		//std::cout << strTimestamp << " - " << strType << " - " << __FILE__ << ":" << __LINE__ << " - " << logMessage << std::endl;	
 	}
 	catch(std::ofstream::failure e)
 	{

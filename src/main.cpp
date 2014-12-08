@@ -6,14 +6,8 @@ int main(int argc, char* argv[])
 	static_cast<void>(argv);
 	
 	std::string sql = "SELECT * FROM names";
-	std::string strFile = "Logs.txt";
 	std::string strErrorMsg;
 	p_resultSet res;
-
-	if(SUCCESS != Logger::GetInstance()->OpenFile(strFile)) // creating and opening log file
-	{
-		return FAIL;
-	}
 
 	if(SUCCESS != Database::GetInstance()->ConnectToDatabase()) // establish connection to database
 	{
@@ -30,20 +24,20 @@ int main(int argc, char* argv[])
 
 		if(rows)
 		{
-			//LOG_INFO("ResultSet not empty! Rows = " + static_cast<std::string>(rows));
+			LOG_INFO("ResultSet not empty! Rows = %d", rows);
 
 			while(res->next())
 			{
-				//LOG_INFO("ID: " + static_cast<std::string>(res->getInt(1)); // 1 = 1st column
-				//LOG_INFO(static_cast<std::string>(res->getString("firstname"))); // "firstname" = column name
+				LOG_INFO("ID: %d", res->getInt(1)); // 1 = 1st column
+				LOG_INFO("%s", res->getString("firstname").c_str()); // "firstname" = column name
 				
 				res->getString("middlename");
 				if(!res->wasNull()) // check if last column called was null
 				{
-					//LOG_INFO(static_cast<std::string>(res->getString("middlename")));
+					LOG_INFO("%s", res->getString("middlename").c_str());
 				}
 
-				//LOG_INFO(static_cast<std::string>(res->getString("lastname"))); 
+				LOG_INFO("%s", res->getString("lastname").c_str()); 
 			}
 		}
 		else

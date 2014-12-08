@@ -34,7 +34,7 @@ int Database::ConnectToDatabase()
 	}
 	catch(sql::SQLException& e)
 	{
-		LOG_ERROR("Database::ConnectToDatabase SQLException: " + static_cast<std::string>(e.what()));
+		LOG_ERROR("Database::ConnectToDatabase SQLException: %s", e.what());
 		return FAIL;
 	}
 	catch(...)
@@ -49,7 +49,7 @@ int Database::ConnectToDatabase()
 
 int Database::ExecuteQuery(std::string sqlQuery, p_resultSet& res)
 {
-	LOG_DEBUG("Database::ExecuteQuery sqlQuery = " + sqlQuery);
+	LOG_DEBUG("Database::ExecuteQuery sqlQuery = %s", sqlQuery.c_str());
 	p_statement stmt;
 
 	try
@@ -62,7 +62,7 @@ int Database::ExecuteQuery(std::string sqlQuery, p_resultSet& res)
 	}
 	catch(sql::SQLException& e)
 	{
-		LOG_ERROR("Database::ExecuteQuery SQLException: " + static_cast<std::string>(e.what()));
+		LOG_ERROR("Database::ExecuteQuery SQLException: %s", e.what());
 
 		return FAIL;
 	}
