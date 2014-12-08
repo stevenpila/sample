@@ -1,0 +1,7 @@
+1. How to Implement Variable Arguments in Functions
+ - www.cppcodetips.wordpress.com/2014/01/02/a-simple-logger-class-in-c (reference)
+
+2. How to Implement MACRO Functions with Variable Arguments
+ - #define LOG( ... ) log(##__VA_ARGS__)
+
+ - www.geeksforgeeks.org/variable-length-arguments-for-macros (reference)
