@@ -1,0 +1,23 @@
+Reference
+
+1. http://rogerdudler.github.io/git-guide/
+
+2. Commit Locally
+ - git add [files]
+ - git commit -m "[comment]"
+
+3. Commit to Trunk
+ - git push origin [branch]
+
+4. Update Local Repository
+ - git pull origin [branch]
+
+5. Revert Local Changes
+ - git checkout -- [file]
+
+6. Change Branch
+ - git checkout [branch]
+
+7. Merge Branch to Master Branch
+ - git checkout master
+ - git merge [branch]

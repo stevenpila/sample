@@ -35,7 +35,6 @@ int Database::ConnectToDatabase()
 	catch(sql::SQLException& e)
 	{
 		LOG_ERROR("Database::ConnectToDatabase SQLException: " + static_cast<std::string>(e.what()));
-		
 		return FAIL;
 	}
 	catch(...)

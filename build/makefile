@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-c -Wall
+CFLAGS=-g -c -Wall -Werror
 LDFLAGS= \
 	-L/usr/lib/
 
@@ -10,7 +10,7 @@ LDLIBS= \
 SOURCE_PATH=../src
 
 INCLUDES= \
-	-I/home/nekkapajigar/Documents/Programming/git/sample/src/include
+	-I$(HOME)/Documents/Programming/git/sample/src/include
 SOURCES= \
 	$(SOURCE_PATH)/main.cpp \
 	$(SOURCE_PATH)/Database.cpp \

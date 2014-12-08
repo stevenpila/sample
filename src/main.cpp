@@ -1,12 +1,10 @@
-#include <cstdlib>
-
 #include "Database.hpp"
 
 int main(int argc, char* argv[])
 {
 	static_cast<void>(argc);
 	static_cast<void>(argv);
-
+	
 	std::string sql = "SELECT * FROM names";
 	std::string strFile = "Logs.txt";
 	std::string strErrorMsg;
@@ -21,7 +19,7 @@ int main(int argc, char* argv[])
 	{
 		return FAIL;
 	}
-	
+
 	int status = Database::GetInstance()->ExecuteQuery(sql, res); // executing mysql query
 
 	if(SUCCESS == status)

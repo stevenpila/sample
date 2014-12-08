@@ -1,0 +1,15 @@
+1. Create a Database
+ - www.liquidweb.com/kb/create-a-mysql-database-on-linux-via-command-line/
+
+2. Access to Specific Database
+ - mysql -u root -p[password] [database_name]
+   E.g mysql -u root -pnekkapajigar sample
+
+ - www.yolinux.com/TUTORIALS/LinuxTutorialMySQL.html (reference)
+
+3. Create User and Grant Privileges
+ - CREATE USER '[new_user]'@'localhost' IDENTIFIED by 'new_password';
+ - GRANT ALL PRIVILEGES ON * . * TO '[new_user]'@'localhost';
+ - FLUSH PRIVILEGES;
+
+ - www.digitalocean.com/community/tutorials/how-to-create-a-new-user-and-grant-permissions-in-mysql (reference)
