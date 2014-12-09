@@ -1,8 +1,10 @@
 #include <constants.hpp>
+#include "Destroyer.hpp"
 
 #include <fstream>
 #include <sstream>
 #include <cstdarg>
+#include <ios>
 
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
@@ -37,14 +39,12 @@ class Logger
 		*/
 		int WriteLog(LogType const type, char const* format, ... );
 
-		/**
-		    @description - closes the opened file
-		    @return SUCCESS if successfully closed file and FAIL if not
-		*/
-		int CloseFile();
-
 	// private member functions
 	private:
+		/**
+		    @description - gets the current datetime at run time
+		    @return datetime string (Y-m-d H:M:S)		
+		*/
 		std::string GetTimeStamp();
 
 		/**
@@ -54,15 +54,26 @@ class Logger
 		*/
 		std::string GetLogType(LogType const type);
 
+		/**
+		    @description - closes the opened file
+		    @return SUCCESS if successfully closed file and FAIL if not
+		*/
+		int CloseFile();
+
+	protected:
+		Logger(){}
+		virtual ~Logger(){}
+		friend class Destroyer<Logger>;
+
 	// private member functions (dont modify)
 	private:
-		Logger(){};
-		Logger(Logger const&);
-		Logger& operator=(Logger const&);
+		//Logger(Logger const&);
+		//Logger& operator=(Logger const&);
 
 	// private member variables
 	private:
 		static Logger* c_pLogger;
+		static Destroyer<Logger> c_destroyer;
 		static std::ofstream c_file;
 		static std::string const c_fileName;
 

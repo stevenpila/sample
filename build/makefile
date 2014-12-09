@@ -28,7 +28,10 @@ run:
 	@./$(TARGET)
 
 clean:
-	rm -rf $(SOURCE_PATH)/*.o $(TARGET) Logs.txt
+	rm -rf $(SOURCE_PATH)/*.o $(TARGET) Logs.txt memcheck.log
+
+memcheck:
+	@valgrind --leak-check=full --show-reachable=yes --tool=memcheck --log-file=memcheck.log ./$(TARGET)
 
 $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $@ $(LDFLAGS) $(LDLIBS)

@@ -1,4 +1,8 @@
+#ifndef _DATABASE_H_
+#define _DATABASE_H_
+
 #include "Logger.hpp"
+#include "Destroyer.hpp"
 
 #include <memory>
 
@@ -11,9 +15,6 @@
 
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
-
-#ifndef _DATABASE_H_
-#define _DATABASE_H_
 
 typedef std::auto_ptr<sql::Connection> p_connection;
 typedef std::auto_ptr<sql::ResultSet> p_resultSet;
@@ -43,19 +44,24 @@ class Database
 		 */
 		int ExecuteQuery(std::string const sqlQuery, p_resultSet& res);
 
+		int Close();
+
 	// private member functions
-	private:
-	
+	protected:
+		Database(){}
+		virtual ~Database(){}
+		friend class Destroyer<Database>;
+
 	// private member functions (dont modify)
 	private:
-		Database();
-		~Database();
-		Database(Database const&);
-		Database& operator=(Database const&);
+		//Database(Database const&);
+		//Database& operator=(Database const&);
 
 	// private member variables
 	private:
 		static Database* c_pDatabase;
+		static Destroyer<Database> c_destroyer;
+
 		boost::mutex c_mutexDb;
 
 		p_connection c_conn;

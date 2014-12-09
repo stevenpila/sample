@@ -5,3 +5,6 @@
  - #define LOG( ... ) log(##__VA_ARGS__)
 
  - www.geeksforgeeks.org/variable-length-arguments-for-macros (reference)
+
+3. How to Destroy a Singleton Object
+ - www.sourcemaking.com/design_patterns/to_kill_a_singleton (reference)

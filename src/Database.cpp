@@ -4,6 +4,7 @@
 #include <boost/scoped_ptr.hpp>
 
 Database* Database::c_pDatabase = NULL;
+Destroyer<Database> Database::c_destroyer;
 
 /* Public Member Functions */
 Database* Database::GetInstance()
@@ -11,6 +12,7 @@ Database* Database::GetInstance()
 	if(!c_pDatabase)
 	{
 		c_pDatabase = new Database;
+		c_destroyer.SetSingleton(c_pDatabase);
 	}
 	
 	return c_pDatabase;
@@ -70,13 +72,22 @@ int Database::ExecuteQuery(std::string sqlQuery, p_resultSet& res)
 	return SUCCESS;
 }
 
-/* Private Member Functions */
-Database::Database()
+int Database::Close()
 {
-	LOG_DEBUG("Database::Database Database instance created");
-};
+	LOG_DEBUG("Database::Close Close database connection");
+	
+	try
+	{
+		c_conn->close();	
+	}
+	catch(sql::SQLException& e)
+	{
+		LOG_ERROR("Database::Close SQLException: %s", e.what());
+		
+		return FAIL;	
+	}
 
-Database::~Database()
-{
-	LOG_DEBUG("Database::~Database Database instance destroyed");
+	return SUCCESS;
 }
+
+/* Private Member Functions */

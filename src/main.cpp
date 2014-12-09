@@ -4,6 +4,8 @@ int main(int argc, char* argv[])
 {
 	static_cast<void>(argc);
 	static_cast<void>(argv);
+
+	Logger::GetInstance()->OpenFile(); // open log file
 	
 	std::string sql = "SELECT * FROM names";
 	std::string strErrorMsg;
@@ -29,7 +31,7 @@ int main(int argc, char* argv[])
 			while(res->next())
 			{
 				LOG_INFO("ID: %d", res->getInt(1)); // 1 = 1st column
-				LOG_INFO("%s", res->getString("firstname").c_str()); // "firstname" = column name
+					LOG_INFO("%s", res->getString("firstname").c_str()); // "firstname" = column name
 				
 				res->getString("middlename");
 				if(!res->wasNull()) // check if last column called was null
@@ -45,8 +47,8 @@ int main(int argc, char* argv[])
 			LOG_INFO("ResultSet empty!");
 		}
 	}
-	
-	if(SUCCESS != Logger::GetInstance()->CloseFile()) // closing log file
+
+	if(SUCCESS != Database::GetInstance()->Close())
 	{
 		return FAIL;
 	}
